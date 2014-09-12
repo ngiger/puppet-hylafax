@@ -1,0 +1,17 @@
+{
+  "name": "ngiger/hylafax",
+  "version": "0.1.0",
+  "author": "Niklaus Giger",
+  "summary": "Support for sending/receiving FAX via USB-modem",
+  "license": "GPL",
+  "source": "https://github.com/ngiger/puppet-hylafax",
+  "project_page": "https://github.com/ngiger/puppet-hylafax",
+  "issues_url": null,
+  "dependencies": [
+    {
+      "name": "puppetlabs-stdlib",
+      "version_range": ">= 1.0.0"
+    }
+  ]
+}
+
