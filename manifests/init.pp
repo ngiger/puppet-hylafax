@@ -14,28 +14,49 @@
 #
 # Here you should define a list of variables that this module would require.
 #
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
+# [*faxusers*]
+#   An array of username which are allowed to use the sendfax. Defaults to []
+#
+# [*fax_server*]
+#   The name of the server for sending faxes. Defaults to localhost
 #
 # === Examples
 #
 #  class { hylafax:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
+#    faxusers => [ 'john', 'mary' ],
+#    fax_server => [ 'faxserver.my_company.com' ],
 #  }
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Niklaus Giger <niklaus.giger@member.fsf.org>
 #
 # === Copyright
 #
-# Copyright 2014 Your name here, unless otherwise noted.
+# Copyright 2014 Niklaus Giger
 #
-class hylafax {
+class hylafax($ensure = true,
+              $faxusers   = [],
+              $fax_server = 'localhost',
+      ) {
+  if ($ensure == true) { 
+    ensure_packages(['hylafax-client'])    
+    add_fax_users{$faxusers:}
+    
+    file_line { 'set_global_env_faxserver':
+      path  => '/etc/environment',
+      line  => "FAXSERVER=$fax_server",
+      match => '^FAXSERVER=',
+    }
+  }
 
-
+  define add_fax_user($username) {
+  exec { "add_fax_user-$username":
+      command => "/usr/sbin/faxadduser $username",
+      unless  => "/bin/grep --word-regexp --quiet $username /var/spool/hylafax/etc/hosts.hfaxd",
+    }
+  }
+  define add_fax_users() {
+    add_fax_user{"faxuser-$title": username => $title}
+  }
 }

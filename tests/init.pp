@@ -9,4 +9,8 @@
 # Learn more about module testing here:
 # http://docs.puppetlabs.com/guides/tests_smoke.html
 #
-include hylafax
+class { hylafax:
+  faxusers => [ 'john', 'mary' ],
+  fax_server => [ 'faxserver.my_company.com' ],
+}
+

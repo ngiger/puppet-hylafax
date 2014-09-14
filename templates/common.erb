@@ -1,0 +1,26 @@
+# Managed by puppet-hylafax
+# this is the common  for all supported modems
+CountryCode:          <%= @country_code %>
+AreaCode:             <%= @area_code %>
+FAXNumber:            <%= @fax_number %>
+LongDistancePrefix:   <%= @long_distance %>
+InternationalPrefix:  <%= @international %>
+LocalIdentifier:      <%= @fax_identifier %>
+RecvFileMode:         <%= @recv_file_mode %>
+
+DialStringRules:  etc/dialrules
+ServerTracing:    1
+SessionTracing:   11
+LogFileMode:    0600
+DeviceMode:   0600
+RingsBeforeAnswer:  3
+SpeakerVolume:    off
+GettyArgs:    "-h %l dx_%s"
+TagLineFont:    etc/lutRS18.pcf
+TagLineFormat:    "From %%l|%c|Page %%P of %%T"
+MaxRecvPages:   25
+
+<%= @dial_cmd and @dial_cmd.length > 0 ? "ModemDialCmd: #{@dial_cmd} # specified via dial_cmd" : "# no dial_cmd specified" %> for the hylafax-server class
+
+# end of common
+
