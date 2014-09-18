@@ -35,7 +35,7 @@
 #
 # Copyright 2014 Niklaus Giger
 #
-class hylafax($ensure = true,
+class hylafax($ensure = false,
               $faxusers   = [],
               $fax_server = 'localhost',
       ) {

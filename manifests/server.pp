@@ -4,7 +4,7 @@
 #
 # === Parameters
 #
-# [*enable*]
+# [*ensure*]
 #   Enable the server (default). Change it to absent if you want to remove it
 # [*input_dir*]
 #   if defined a /etc/hylafax/FaxSetup will be created to copy all incoming
@@ -20,7 +20,7 @@
 #    $input_dir => '/var/fax/incoming',
 #  }
 class hylafax::server (
-    $enable  = true,
+    $ensure  = false,
     $input_dir = '/opt/fax',
     $input_facl = '-d -m o::rX',
     $tty        = 'ttyACM0',
@@ -33,16 +33,15 @@ class hylafax::server (
     $long_distance  = '',
     $international  = '00',
     $fax_identifier = 'My company name',
-    $fax_identifier = 'My company name',
     $dial_cmd       = '', # sets the ModemDialCmd in /etc/hylafax/config.$tty if specified
 # e.g. "ATX3DT0,,,%s" AT - picks up the phone, X3- disables dial tone check, DT tells it to use tone, dial 0, then ",,," for wait, then the phone number
 # for the us-robotics I needed something like ATX3DT,,,%s
 # the trendnet did not need any
 
 ) {
-  ensure_packages(['hylafax-server'], {ensure => $enable})
+  ensure_packages(['hylafax-server'], {ensure => $ensure})
   
-  unless ("$enable" == "absent") {
+  unless ("$ensure" == "absent") {
     file{"$input_dir": ensure  => directory}
     if ("$input_facl") {
       
