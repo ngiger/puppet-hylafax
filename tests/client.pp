@@ -9,9 +9,9 @@
 # Learn more about module testing here:
 # http://docs.puppetlabs.com/guides/tests_smoke.html
 #
-class { hylafax:
-  ensure     => true,
-  faxusers   => [ 'john', 'mary' ],
-  fax_server => [ 'faxserver.my_company.com' ],
+class { 'hylafax::client':
+  ensure => true,
+  fax_server => 'faxserver.my_company.com',
 }
 
+  

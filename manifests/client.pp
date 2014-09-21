@@ -35,5 +35,17 @@
 #
 # Copyright 2014 Niklaus Giger
 #
-class hylafax{}
+class hylafax::client(
+  $ensure = true,
+  $fax_server = 'localhost',
+) {
+  if ($ensure == true) {
+    ensure_packages(['hylafax-client'])
 
+    file_line { 'set_global_env_faxserver':
+      path  => '/etc/environment',
+      line  => "FAXSERVER=${fax_server}",
+      match => '^FAXSERVER=',
+    }
+  }
+}

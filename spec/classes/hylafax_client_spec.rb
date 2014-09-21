@@ -16,12 +16,13 @@
 #
 require 'spec_helper'
 
-describe 'hylafax' do
-#  let(:title) { 'hylafax' }
-  let(:params) { {:ensure => true} }
+describe 'hylafax::client' do
+  let(:node) { 'testhost.example.com' }
+  let(:params) { {:ensure => true,} }
+
   context 'when running on Debian GNU/Linux' do
     it {
-      should contain_package('hylafax-client') #    .with_ensure(/present|installed|true/)
+      should contain_package('hylafax-client').with_ensure(/present|installed|true/)
     }
   end
 end

@@ -20,7 +20,8 @@
 #    $input_dir => '/var/fax/incoming',
 #  }
 class hylafax::server (
-    $ensure  = absent,
+    $ensure  = true,
+    $faxusers   = [],
     $input_dir = '/opt/fax',
     $input_facl = '-d -m o::rX',
     $tty        = 'ttyACM0',
@@ -41,26 +42,51 @@ class hylafax::server (
 ) {
   ensure_packages(['hylafax-server'], {ensure => $ensure})
   
-  unless ("$ensure" == "absent") {
-    file{"$input_dir": ensure  => directory}
-    if ("$input_facl") {
-      
-       exec{"set_facl_$input_dir":
-        command => "/usr/bin/setfacl $input_facl $input_dir",
-        unless  => "/usr/bin/getfacl $input_dir | grep $input_facl",
-        require => File["$input_dir"],
-       }
+  unless ($ensure == 'absent') {
+    add_fax_users{$faxusers:}
+    file{$input_dir: ensure  => directory}
+    if ($input_facl) {
+
+      exec{"set_facl_${input_dir}":
+        command => "/usr/bin/setfacl ${input_facl} ${input_dir}",
+        unless  => "/usr/bin/getfacl ${input_dir} | grep ${input_facl}",
+        require => File[$input_dir],
+      }
+    }
     
+    if ($input_dir) {
       file{'/etc/hylafax/FaxDispatch':
         require => Package['hylafax-server'],
-        content => "/bin/cp -pv \$FILE $input_dir
+        content => "/bin/cp -pv \$FILE ${input_dir}
 "      }
-      file{"/etc/hylafax/config.$tty":
+    }
+
+    if ($tty) {
+      file{"/etc/hylafax/config.${tty}":
         require => Package['hylafax-server'],
-        content => template("hylafax/common.erb", "hylafax/$modem_type.erb"),
+        content => template('hylafax/common.erb', "hylafax/${modem_type}.erb"),
       }
     }
   }
 }
- 
 
+# === Parameters
+#
+# Add a fax user which is allowed to use sendfax.
+# Ensure that the hylafax-server is present
+
+define add_fax_user($username) {
+exec { "add_fax_user-${username}":
+    command => "/usr/sbin/faxadduser ${username}",
+    unless  => "/bin/grep --word-regexp --quiet ${username} /var/spool/hylafax/etc/hosts.hfaxd",
+    require => Package['hylafax-server'],
+  }
+}
+
+# === Parameters
+#
+# Add add_fax_users (an array of user names
+
+define add_fax_users() {
+  add_fax_user{"faxuser-${title}": username => $title}
+}

@@ -8,10 +8,7 @@
   "project_page": "https://github.com/ngiger/puppet-hylafax",
   "issues_url": null,
   "dependencies": [
-    {
-      "name": "puppetlabs-stdlib",
-      "version_range": ">= 1.0.0"
-    }
+    {"name":"puppetlabs/stdlib","version_requirement":">= 2.0.0"}
   ]
 }
 
