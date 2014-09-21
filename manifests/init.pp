@@ -54,6 +54,7 @@ class hylafax($ensure = false,
   exec { "add_fax_user-$username":
       command => "/usr/sbin/faxadduser $username",
       unless  => "/bin/grep --word-regexp --quiet $username /var/spool/hylafax/etc/hosts.hfaxd",
+      require => Package['hylafax-client'],
     }
   }
   define add_fax_users() {

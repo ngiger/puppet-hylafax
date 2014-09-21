@@ -46,6 +46,11 @@ h2. Usage
 Put the classes, types, and resources for customizing, configuring, and doing
 the fancy stuff with your module here.
 
+When the hylafax server start you will see lines 
+ HylaFAX[13915]: Filesystem has SysV-style file creation semantics.
+under /var/log/syslog
+
+
 h2. Reference
 
 Here, list the classes, types, providers, facts, etc contained in your module.

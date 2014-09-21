@@ -20,7 +20,7 @@
 #    $input_dir => '/var/fax/incoming',
 #  }
 class hylafax::server (
-    $ensure  = false,
+    $ensure  = absent,
     $input_dir = '/opt/fax',
     $input_facl = '-d -m o::rX',
     $tty        = 'ttyACM0',
