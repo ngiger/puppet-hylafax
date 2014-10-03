@@ -36,7 +36,7 @@
 # Copyright 2014 Niklaus Giger
 #
 class hylafax::client(
-  $ensure = true,
+  $ensure = false,
   $fax_server = 'localhost',
 ) {
   if ($ensure == true) {

@@ -9,8 +9,9 @@
 # [*input_dir*]
 #   if defined a /etc/hylafax/FaxSetup will be created to copy all incoming
 #   faxes to this direcotry
-# [*input_facl*]
-#   if defined we will call a set_facl $input_facl $input_dir
+# [*input_permissions*]
+#   fooacl permissions: 
+#   See: https://github.com/thias/puppet-fooacl/blob/master/README.md#examples
 # [*recv_file_mode*]
 #   Mode of files received. Defaut 0600
 #
@@ -20,10 +21,10 @@
 #    $input_dir => '/var/fax/incoming',
 #  }
 class hylafax::server (
-    $ensure  = true,
+    $ensure  = false,
     $faxusers   = [],
     $input_dir = '/opt/fax',
-    $input_facl = '-d -m o::rX',
+    $input_permissions = ['other:other:rwX',], # '-d -m o::rX',
     $tty        = 'ttyACM0',
     $modem_type = 'us_robotics', # Configuration, details see ../templates/$modem_type.erb
                     # modem_type must be trendnet or us_robotics
@@ -45,12 +46,10 @@ class hylafax::server (
   unless ($ensure == 'absent') {
     add_fax_users{$faxusers:}
     file{$input_dir: ensure  => directory}
-    if ($input_facl) {
-
-      exec{"set_facl_${input_dir}":
-        command => "/usr/bin/setfacl ${input_facl} ${input_dir}",
-        unless  => "/usr/bin/getfacl ${input_dir} | grep ${input_facl}",
-        require => File[$input_dir],
+    if ($input_permissions) {
+      fooacl::conf { 'facl_${input_dir}':
+        target      => "${input_dir}",
+        permissions => $input_permissions,
       }
     }
     
