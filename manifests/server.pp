@@ -47,8 +47,8 @@ class hylafax::server (
     add_fax_users{$faxusers:}
     file{$input_dir: ensure  => directory}
     if ($input_permissions) {
-      fooacl::conf { 'facl_${input_dir}':
-        target      => "${input_dir}",
+      fooacl::conf { "facl_${input_dir}":
+        target      => $input_dir,
         permissions => $input_permissions,
       }
     }

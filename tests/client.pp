@@ -10,7 +10,7 @@
 # http://docs.puppetlabs.com/guides/tests_smoke.html
 #
 class { 'hylafax::client':
-  ensure => true,
+  ensure     => true,
   fax_server => 'faxserver.my_company.com',
 }
 
