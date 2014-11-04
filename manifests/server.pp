@@ -10,7 +10,7 @@
 #   if defined a /etc/hylafax/FaxSetup will be created to copy all incoming
 #   faxes to this direcotry
 # [*input_permissions*]
-#   fooacl permissions: 
+#   fooacl permissions:
 #   See: https://github.com/thias/puppet-fooacl/blob/master/README.md#examples
 # [*recv_file_mode*]
 #   Mode of files received. Defaut 0600
@@ -24,7 +24,7 @@ class hylafax::server (
     $ensure  = false,
     $faxusers   = [],
     $input_dir = '/opt/fax',
-    $input_permissions = ['other:other:rwX',], # '-d -m o::rX',
+    $input_permissions = ['uucp:uucp:rwX',], # '-d -m o::rX', 'uucp:uucp:rwX',
     $tty        = 'ttyACM0',
     $modem_type = 'us_robotics', # Configuration, details see ../templates/$modem_type.erb
                     # modem_type must be trendnet or us_robotics
@@ -42,8 +42,8 @@ class hylafax::server (
 
 ) {
   ensure_packages(['hylafax-server'], {ensure => $ensure})
-  
-  unless ($ensure == 'absent') {
+
+  unless ($ensure == 'absent' or $ensure == false) {
     add_fax_users{$faxusers:}
     file{$input_dir: ensure  => directory}
     if ($input_permissions) {
@@ -52,7 +52,7 @@ class hylafax::server (
         permissions => $input_permissions,
       }
     }
-    
+
     if ($input_dir) {
       file{'/etc/hylafax/FaxDispatch':
         require => Package['hylafax-server'],

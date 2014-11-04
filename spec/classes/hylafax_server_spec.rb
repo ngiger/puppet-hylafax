@@ -35,8 +35,11 @@ describe 'hylafax::server' do
       should contain_package('hylafax-server').with_ensure(/present|installed|true/)
       should contain_file('/my/input').with({'ensure' => 'directory'})
       should contain_file('/etc/hylafax/FaxDispatch').with_content(/cp/)
+      should contain_file('/usr/local/sbin/fooacl')
+      should contain_exec('concat_/usr/local/sbin/fooacl')
+#      should contain_fooacl__conf('facl_/home/praxis/Eingang')
+      should contain_fooacl__conf('facl_/my/input')
     }
-    skip "Should tests facl"
   end
 end
 
@@ -59,6 +62,18 @@ describe 'hylafax::server' do
       should contain_file('/home/praxis/Eingang')
       should contain_file('/etc/hylafax/FaxDispatch').with_content(/ \/home\/praxis\/Eingang/)
       should contain_file('/etc/hylafax/config.ACM1').with_content(/template\/us_robotics.erb/)
+    }
+  end
+end
+
+describe 'hylafax::server' do
+  let(:params) { {:ensure => false,} }
+  context 'and passing tty' do
+    it {
+      should contain_package('hylafax-server').with_ensure(/false/)
+      should_not contain_file('/home/praxis/Eingang')
+      should_not contain_file('/etc/hylafax/FaxDispatch')
+      should_not contain_file('/etc/hylafax/config.ACM1')
     }
   end
 end
