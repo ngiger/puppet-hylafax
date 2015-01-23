@@ -56,7 +56,10 @@ class hylafax::server (
     if ($input_dir) {
       file{'/etc/hylafax/FaxDispatch':
         require => Package['hylafax-server'],
-        content => "/bin/cp -pv \$FILE ${input_dir}
+        content => "#!/bin/sh
+export OUTFILE=\"${input_dir}/FAX `date +'%Y-%m-%d %H.%M.%S'`.tif\"
+/bin/cp -v $FILE \"$OUTFILE\"
+/bin/chmod o+r \"$OUTFILE\"
 "      }
     }
 
