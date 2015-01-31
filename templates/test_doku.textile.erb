@@ -1,0 +1,18 @@
+h1. Things to be tested for hylafax on the server
+
+* Reboot before testing!
+* Send fax to automatic answer from swisscom
+* Check that fax gets received
+* CUPS-Printer SambaFax should exist
+* Test that sending/receiving fax is logged by executing
+** @grep 'SEND FAX' /var/log/daemon.log@
+** @grep 'RECV FAX' /var/log/daemon.log@
+
+h1. Things to be tested for hylafax on the client
+
+* Print via SambaFax should work
+* Print via @sendfax -d destination file_name@ should work (On Unix-Clients)
+
+h2. low level
+
+* check that usb module for fax exist on server
