@@ -25,8 +25,8 @@ class hylafax::server (
     $faxusers   = [],
     $input_dir = '/opt/fax',
     $input_permissions = ['uucp:uucp:rwX',], # '-d -m o::rX', 'uucp:uucp:rwX',
-    $tty        = 'ttyACM0',
-    $modem_type = 'us_robotics', # Configuration, details see ../templates/$modem_type.erb
+    $tty    =  false, # e.g 'ttyACM0',
+    $modem_type =  false, # Configuration, details see ../templates/$modem_type.erb
                     # modem_type must be trendnet or us_robotics
     $recv_file_mode = '0600',
     $country_code   = '41',
@@ -63,6 +63,18 @@ export OUTFILE=\"${input_dir}/FAX `date +'%Y-%m-%d %H.%M.%S'`.tif\"
 "      }
     }
 
+    if ($has_trendnet_usb_modem) {
+      file{"/etc/hylafax/config.${has_trendnet_usb_modem}":
+        require => Package['hylafax-server'],
+        content => template('hylafax/common.erb', "hylafax/trendnet.erb"),
+      }
+    }
+    if ($has_us_robotics_usb_modem) {
+      file{"/etc/hylafax/config.${has_us_robotics_usb_modem}":
+        require => Package['hylafax-server'],
+        content => template('hylafax/common.erb', "hylafax/us_robotics.erb"),
+      }
+    }
     if ($tty) {
       file{"/etc/hylafax/config.${tty}":
         require => Package['hylafax-server'],
