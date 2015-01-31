@@ -16,6 +16,8 @@ When installing the server the Hylafax will be configured using some variables f
 ## fax nr
 ## fax id, eg. name of company
 
+Some US-Robotics and Trendnet USB-Modems are recognized automatically.
+
 ## Setup
 
 Tested with
@@ -32,14 +34,11 @@ h3. What hylafax affects
 
 * installs hylafax-client/server
 * creates a directory for the received faxes
+* You may use http://winprinthylafax.sourceforge.net/ for Windows-clients
 
 h3. Beginning with hylafax
 
-The very basic steps needed for a user to get the module up and running.
 
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
 
 h2. Usage
 
