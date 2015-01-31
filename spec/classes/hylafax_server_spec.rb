@@ -15,8 +15,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 require 'spec_helper'
-
 describe 'hylafax::server' do
+  let(:facts ) { {:has_trendnet_usb_modem =>false, :has_us_robotics_usb_modem => false, } }
   let(:params) { {:ensure => true, :input_dir => '/my/input'} }
   context 'when running on Debian GNU/Linux' do
     it {
@@ -27,6 +27,7 @@ describe 'hylafax::server' do
 end
 
 describe 'hylafax::server' do
+  let(:facts ) { {:has_trendnet_usb_modem =>false, :has_us_robotics_usb_modem => false, } }
   let(:params) { {:ensure => true, :input_dir => '/my/input',
                  # :input_facl => "grw",
                  } }
@@ -44,6 +45,7 @@ describe 'hylafax::server' do
 end
 
 describe 'hylafax::server' do
+  let(:facts ) { {:has_trendnet_usb_modem =>false, :has_us_robotics_usb_modem => false, } }
   let(:params) { {:ensure => true, :modem_type => 'trendnet', :input_dir =>'/home/praxis/Eingang', :tty => "ACM0"} }
   context 'and passing tty' do
     it {
@@ -56,7 +58,7 @@ end
 
 describe 'hylafax::server' do
   let(:params) { {:ensure => true, :input_dir =>'/home/praxis/Eingang'} }
-  let(:facts ) { {:has_us_robotics_usb_modem => 'ACM3'} }
+  let(:facts ) { {:has_us_robotics_usb_modem => 'ACM3', :has_trendnet_usb_modem => 'ACM4' } }
   context 'and having has_us_robotics_usb_modem' do
     it {
       should contain_package('hylafax-server').with_ensure(/present|installed|true/)
@@ -69,20 +71,7 @@ describe 'hylafax::server' do
 end
 
 describe 'hylafax::server' do
-  let(:params) { {:ensure => true, :input_dir =>'/home/praxis/Eingang'} }
-  let(:facts ) { {:has_trendnet_usb_modem => 'ACM3'} }
-  context 'and having has_trendnet_usb_modem' do
-    it {
-      should contain_package('hylafax-server').with_ensure(/present|installed|true/)
-      should contain_file('/home/praxis/Eingang')
-      should contain_file('/etc/hylafax/FaxDispatch').with_content(/OUTFILE="\/home\/praxis\/Eingang\/FAX/)
-      # don't know howto
-      should contain_file('/etc/hylafax/config.ACM3').with_content(/template\/trendnet.erb/)
-    }
-  end
-end
-
-describe 'hylafax::server' do
+  let(:facts ) { {:has_trendnet_usb_modem =>false, :has_us_robotics_usb_modem => false, } }
   let(:params) { {:ensure => false,} }
   context 'and passing tty' do
     it {
@@ -93,3 +82,19 @@ describe 'hylafax::server' do
     }
   end
 end
+
+describe 'hylafax::server' do
+  let(:facts ) { {:has_trendnet_usb_modem => 'ACM3', :has_us_robotics_usb_modem => false, } }
+  let(:params) { {:ensure => true, :input_dir =>'/home/praxis/Eingang'} }
+  context 'and having has_trendnet_usb_modem' do
+    it {
+      should contain_package('hylafax-server').with_ensure(/present|installed|true/)
+      should contain_file('/home/praxis/Eingang')
+      should contain_file('/etc/hylafax/FaxDispatch').with_content(/OUTFILE="\/home\/praxis\/Eingang\/FAX/)
+      # don't know howto
+      should contain_file('/etc/hylafax/config.ACM3')
+      should contain_file('/etc/hylafax/config.ACM3').with_content(/template\/trendnet.erb/)
+    }
+  end
+end
+

@@ -39,7 +39,6 @@ class hylafax::server (
 # e.g. "ATX3DT0,,,%s" AT - picks up the phone, X3- disables dial tone check, DT tells it to use tone, dial 0, then ",,," for wait, then the phone number
 # for the us-robotics I needed something like ATX3DT,,,%s
 # the trendnet did not need any
-
 ) {
   ensure_packages(['hylafax-server'], {ensure => $ensure})
 
@@ -58,8 +57,8 @@ class hylafax::server (
         require => Package['hylafax-server'],
         content => "#!/bin/sh
 export OUTFILE=\"${input_dir}/FAX `date +'%Y-%m-%d %H.%M.%S'`.tif\"
-/bin/cp -v $FILE \"$OUTFILE\"
-/bin/chmod o+r \"$OUTFILE\"
+/bin/cp -v \$FILE \"\$OUTFILE\"
+/bin/chmod o+r \"\$OUTFILE\"
 "      }
     }
 
